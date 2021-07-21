@@ -4,7 +4,9 @@ const { ProspectSet } = require("../Models/prospectSet");
 const router = express.Router();
 
 router.get("/getProspectSet", async (req, res) => {
-  const prospectSet = await ProspectSet.find({});
+  const prospectSet = await ProspectSet.find({}).sort({
+    _id: -1,
+  });;
   if (ProspectSet.length > 0) {
     return res.status(200).json({ status: 200, prospectSet: prospectSet });
   }
@@ -72,4 +74,20 @@ router.post("/deleteProspectSet", async (req, res) => {
   });
 });
 
+router.get("/searchProspect/:letter", async (req, res) => {
+  const letter = req.params.letter;
+  console.log(letter);
+  const pattern = `\\b(.*${letter}.*)\\b`;
+  const regex = new RegExp(pattern, "gi");
+  console.log(regex);
+  // let prospectSet = [];
+
+  prospectSet = await ProspectSet.findOne({
+    prospectName: letter,
+  });
+  console.log(prospectSet);
+  return res.status(200).json({
+    prospectSet,
+  });
+});
 module.exports = router;
